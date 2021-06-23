@@ -1,0 +1,1 @@
+# terraform-spotinst-emr-elastigroup
