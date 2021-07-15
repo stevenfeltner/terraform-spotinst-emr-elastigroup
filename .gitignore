@@ -28,3 +28,6 @@ override.tf.json
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
 /.idea/
+/test/
+/scripts/spotinst.egg-info/
+/scripts/__pycache__/

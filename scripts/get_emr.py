@@ -11,8 +11,7 @@ from spotinst_sdk2 import SpotinstSession
 @click.pass_context
 def cli(ctx, *args, **kwargs):
     ctx.obj = {}
-    session = SpotinstSession(auth_token="c09767fd287c6c0df90a4eeba2380c34e248cd02faee419f81ee7b7be795a52f",
-                              account_id="act-61e1c107")
+    session = SpotinstSession()
     ctx.obj['client'] = session.client("elastigroup_aws")
 
 
@@ -35,8 +34,8 @@ def get_logs(ctx, *args, **kwargs):
                 if success:
                     break
                 elif y.startswith("j-"):
-                    cluster = {"cluster_id": str(y)}
                     success = True
+                    cluster = {"cluster_id": str(y)}
                     click.echo(json.dumps(cluster))
 
 
