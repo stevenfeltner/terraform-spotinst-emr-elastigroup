@@ -1,23 +1,3 @@
-terraform {
-  required_version = ">= 0.13.0"
-  required_providers {
-    spotinst = {
-      source = "spotinst/spotinst"
-    }
-  }
-}
-
-provider "spotinst" {
-  token = var.spot_token
-  account = var.spot_account
-}
-
-locals {
-  cmd = "${path.module}/scripts/get-emr"
-  cluster_id = data.external.cluster_id.result["cluster_id"]
-  dns_name = data.external.dns_name.result["dns_name"]
-}
-
 # Create a Elastigroup with EMR integration(Mr Scaler) with New strategy
 resource "spotinst_mrscaler_aws" "MrScaler" {
   name                = var.name
@@ -32,9 +12,7 @@ resource "spotinst_mrscaler_aws" "MrScaler" {
     timeout_action    = var.timeout_action
   }
   retries             = var.retries
-
   release_label       = var.release_label
-
   availability_zones  = var.availability_zones
 
   // --- CLUSTER ------------
@@ -45,15 +23,11 @@ resource "spotinst_mrscaler_aws" "MrScaler" {
   job_flow_role                       = var.job_flow_role
   termination_protected               = var.termination_protected
   keep_job_flow_alive                 = var.keep_job_flow_alive
-
-
   custom_ami_id                       = var.custom_ami_id
   ec2_key_name                        = var.ec2_key_name
-
   managed_primary_security_group      = var.master_sg_id
   managed_replica_security_group      = var.slave_sg_id
   service_access_security_group       = var.service_sg_id
-
   additional_primary_security_groups  = var.additional_master_sg_ids
   additional_replica_security_groups  = var.additional_slave_sg_ids
 
@@ -126,7 +100,6 @@ resource "spotinst_mrscaler_aws" "MrScaler" {
     size_in_gb           = var.task_size_in_gb
   }
   // ----------------------------
-
   dynamic tags {
     for_each = var.tags == null ? [] : var.tags
     content {
@@ -134,19 +107,121 @@ resource "spotinst_mrscaler_aws" "MrScaler" {
       value = tags.value["value"]
     }
   }
+  // ----------------------------
+  # Task Scaling Policies
+  task_scaling_up_policy {
+    policy_name           = var.task_scaling_up_policy_name
+    metric_name           = var.task_scaling_up_metric_name
+    statistic             = var.task_scaling_up_statistic
+    unit                  = var.task_scaling_up_unit
+    threshold             = var.task_scaling_up_threshold
+    action_type           = var.task_scaling_up_action_type
+    //adjustment            = var.task_scaling_up_adjustment
+    min_target_capacity   = var.task_scaling_up_min_target_capacity
+    max_target_capacity   = var.task_scaling_up_max_target_capacity
+    namespace             = var.task_scaling_up_namespace
+    operator              = var.task_scaling_up_operator
+    evaluation_periods    = var.task_scaling_up_evaluation_periods
+    period                = var.task_scaling_up_period
+    cooldown              = var.task_scaling_up_cooldown
+    dimensions = {
+      minimum             = var.task_scaling_up_minimum
+      maximum             = var.task_scaling_up_maximum
+      target              = var.task_scaling_up_target
+    }
+  }
+  task_scaling_down_policy {
+    policy_name           = var.task_scaling_down_policy_name
+    metric_name           = var.task_scaling_down_metric_name
+    statistic             = var.task_scaling_down_statistic
+    unit                  = var.task_scaling_down_unit
+    threshold             = var.task_scaling_down_threshold
+    action_type           = var.task_scaling_down_action_type
+    //adjustment            = var.task_scaling_down_adjustment
+    min_target_capacity   = var.task_scaling_down_min_target_capacity
+    max_target_capacity   = var.task_scaling_down_max_target_capacity
+    namespace             = var.task_scaling_down_namespace
+    operator              = var.task_scaling_down_operator
+    evaluation_periods    = var.task_scaling_down_evaluation_periods
+    period                = var.task_scaling_down_period
+    cooldown              = var.task_scaling_down_cooldown
+    dimensions = {
+      minimum             = var.task_scaling_down_minimum
+      maximum             = var.task_scaling_down_maximum
+      target              = var.task_scaling_down_target
+    }
+  }
+  // ----------------------------
+  # Core Scaling Policies
+  core_scaling_up_policy {
+    policy_name           = var.core_scaling_up_policy_name
+    metric_name           = var.core_scaling_up_metric_name
+    statistic             = var.core_scaling_up_statistic
+    unit                  = var.core_scaling_up_unit
+    threshold             = var.core_scaling_up_threshold
+    action_type           = var.core_scaling_up_action_type
+    //adjustment            = var.core_scaling_up_adjustment
+    min_target_capacity   = var.core_scaling_up_min_target_capacity
+    max_target_capacity   = var.core_scaling_up_max_target_capacity
+    namespace             = var.core_scaling_up_namespace
+    operator              = var.core_scaling_up_operator
+    evaluation_periods    = var.core_scaling_up_evaluation_periods
+    period                = var.core_scaling_up_period
+    cooldown              = var.core_scaling_up_cooldown
+    dimensions = {
+      minimum             = var.core_scaling_up_minimum
+      maximum             = var.core_scaling_up_maximum
+      target              = var.core_scaling_up_target
+    }
+  }
+  core_scaling_down_policy {
+    policy_name           = var.core_scaling_down_policy_name
+    metric_name           = var.core_scaling_down_metric_name
+    statistic             = var.core_scaling_down_statistic
+    unit                  = var.core_scaling_down_unit
+    threshold             = var.core_scaling_down_threshold
+    action_type           = var.core_scaling_down_action_type
+    //adjustment            = var.core_scaling_down_adjustment
+    min_target_capacity   = var.core_scaling_down_min_target_capacity
+    max_target_capacity   = var.core_scaling_down_max_target_capacity
+    namespace             = var.core_scaling_down_namespace
+    operator              = var.core_scaling_down_operator
+    evaluation_periods    = var.core_scaling_down_evaluation_periods
+    period                = var.core_scaling_down_period
+    cooldown              = var.core_scaling_down_cooldown
+    dimensions = {
+      minimum             = var.core_scaling_down_minimum
+      maximum             = var.core_scaling_down_maximum
+      target              = var.core_scaling_down_target
+    }
+  }
+  // ----------------------------
+  ## Scheduled Task ##
+//  scheduled_task {
+//    is_enabled            = var.is_enabled
+//    task_type             = var.task_type
+//    instance_group_type   = var.instance_group_type
+//    cron                  = var.cron
+//    desired_capacity      = var.desired_capacity
+//    min_capacity          = var.min_capacity
+//    max_capacity          = var.max_capacity
+//  }
+
+  termination_policies {
+    statements {
+      namespace           = var.namespace
+      metric_name         = var.metric_name
+      statistic           = var.statistic
+      unit                = var.unit
+      threshold           = var.threshold
+      period              = var.period
+      evaluation_periods  = var.evaluation_periods
+      operator            = var.operator
+    }
+  }
+
 }
 
 
 
-### Call script to get the cluster ID using Spot APIs ###
-data "external" "cluster_id" {
-    depends_on = [spotinst_mrscaler_aws.MrScaler]
-    program = [local.cmd, "get-logs", spotinst_mrscaler_aws.MrScaler.id]
-}
-
-### Call script to get the DNS name/Ip address from the cluster###
-data "external" "dns_name" {
-  depends_on = [data.external.cluster_id]
-  program = [local.cmd, "get-dns", local.cluster_id, var.region]
-}
 

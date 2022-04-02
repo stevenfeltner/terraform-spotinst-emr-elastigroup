@@ -165,8 +165,8 @@ variable "core_min_size" {
 }
 variable "core_unit" {
   type        = string
-  default     = ""
-  description = "Unit of task group for target, min and max. The unit could be instance or weight. instance "
+  default     = "instance"
+  description = "Unit of task group for target, min and max. The unit could be instance or weight."
 }
 variable "core_lifecycle" {
   type        = string
@@ -337,34 +337,34 @@ variable "bootstrap_key" {
 ## Scaling down task Policies ##
 variable "task_scaling_down_policy_name" {
   type        = string
-  default     = null
+  default     = ""
   description = "The name of the policy."
 }
 variable "task_scaling_down_metric_name" {
   type        = string
-  default     = null
-  description = "The name of the metric, with or without spaces."
+  default     = "AppsPending"
+  description = "The name of the metric, with or without spaces. Ex. AppsPending"
 }
 variable "task_scaling_down_statistic" {
   type        = string
-  default     = null
-  description = "The metric statistics to return. For information about specific statistics go to Statistics in the Amazon CloudWatch Developer Guide."
+  default     = "average"
+  description = "The aggregation method of the given metric. Valid Values: average | sum | sampleCount | maximum | minimum"
 }
 variable "task_scaling_down_unit" {
   type        = string
-  default     = null
-  description = "The unit for the metric."
+  default     = "count"
+  description = "The unit for the metric. Ex. count"
 }
 variable "task_scaling_down_threshold" {
-  type        = string
-  default     = null
+  type        = number
+  default     = 100
   description = "The value against which the specified statistic is compared."
 }
-variable "task_scaling_down_adjustment" {
-  type        = string
-  default     = null
-  description = "The number of instances to add/remove to/from the target capacity when scale is needed."
-}
+//variable "task_scaling_down_adjustment" {
+//  type        = number
+//  default     = null
+//  description = "The number of instances to add/remove to/from the target capacity when scale is needed."
+//}
 variable "task_scaling_down_min_target_capacity" {
   type        = number
   default     = null
@@ -377,17 +377,17 @@ variable "task_scaling_down_max_target_capacity" {
 }
 variable "task_scaling_down_namespace" {
   type        = string
-  default     = null
+  default     = "AWS/ElasticMapReduce"
   description = "The namespace for the metric."
 }
 variable "task_scaling_down_operator" {
   type        = string
-  default     = null
+  default     = "lt"
   description = "The operator to use. Allowed values are : 'gt', 'gte', 'lt' , 'lte'."
 }
 variable "task_scaling_down_evaluation_periods" {
   type        = number
-  default     = null
+  default     = 1
   description = "The number of periods over which data is compared to the specified threshold."
 }
 variable "task_scaling_down_period" {
@@ -422,7 +422,7 @@ variable "task_scaling_down_target" {
 }
 variable "task_scaling_down_action_type" {
   type        = string
-  default     = null
+  default     = "adjustment"
   description = "The type of action to perform. Allowed values are : 'adjustment', 'setMinTarget', 'setMaxTarget', 'updateCapacity', 'percentageAdjustment'"
 }
 ####################################
@@ -430,34 +430,34 @@ variable "task_scaling_down_action_type" {
 ## Task Scaling Up task Policies ##
 variable "task_scaling_up_policy_name" {
   type        = string
-  default     = null
+  default     = ""
   description = "The name of the policy."
 }
 variable "task_scaling_up_metric_name" {
   type        = string
-  default     = null
+  default     = "AppsPending"
   description = "The name of the metric, with or without spaces."
 }
 variable "task_scaling_up_statistic" {
   type        = string
-  default     = null
-  description = "The metric statistics to return. For information about specific statistics go to Statistics in the Amazon CloudWatch Developer Guide."
+  default     = "average"
+  description = "The aggregation method of the given metric. Valid Values: average | sum | sampleCount | maximum | minimum"
 }
 variable "task_scaling_up_unit" {
   type        = string
-  default     = null
-  description = "The unit for the metric."
+  default     = "count"
+  description = "The unit for the metric. Ex. count"
 }
 variable "task_scaling_up_threshold" {
-  type        = string
-  default     = null
+  type        = number
+  default     = 100
   description = "The value against which the specified statistic is compared."
 }
-variable "task_scaling_up_adjustment" {
-  type        = string
-  default     = null
-  description = "The number of instances to add/remove to/from the target capacity when scale is needed."
-}
+//variable "task_scaling_up_adjustment" {
+//  type        = number
+//  default     = null
+//  description = "The number of instances to add/remove to/from the target capacity when scale is needed."
+//}
 variable "task_scaling_up_min_target_capacity" {
   type        = number
   default     = null
@@ -470,7 +470,7 @@ variable "task_scaling_up_max_target_capacity" {
 }
 variable "task_scaling_up_namespace" {
   type        = string
-  default     = null
+  default     = "AWS/ElasticMapReduce"
   description = "The namespace for the metric."
 }
 variable "task_scaling_up_operator" {
@@ -480,7 +480,7 @@ variable "task_scaling_up_operator" {
 }
 variable "task_scaling_up_evaluation_periods" {
   type        = number
-  default     = null
+  default     = 1
   description = "The number of periods over which data is compared to the specified threshold."
 }
 variable "task_scaling_up_period" {
@@ -515,7 +515,7 @@ variable "task_scaling_up_target" {
 }
 variable "task_scaling_up_action_type" {
   type        = string
-  default     = null
+  default     = "adjustment"
   description = "The type of action to perform. Allowed values are : 'adjustment', 'setMinTarget', 'setMaxTarget', 'updateCapacity', 'percentageAdjustment'"
 }
 ####################################
@@ -523,34 +523,34 @@ variable "task_scaling_up_action_type" {
 ## core scaling down Policies ##
 variable "core_scaling_down_policy_name" {
   type        = string
-  default     = null
+  default     = ""
   description = "The name of the policy."
 }
 variable "core_scaling_down_metric_name" {
   type        = string
-  default     = null
+  default     = "AppsPending"
   description = "The name of the metric, with or without spaces."
 }
 variable "core_scaling_down_statistic" {
   type        = string
-  default     = null
-  description = "The metric statistics to return. For information about specific statistics go to Statistics in the Amazon CloudWatch Developer Guide."
+  default     = "average"
+  description = "The aggregation method of the given metric. Valid Values: average | sum | sampleCount | maximum | minimum"
 }
 variable "core_scaling_down_unit" {
   type        = string
-  default     = null
-  description = "The unit for the metric."
+  default     = "count"
+  description = "The unit for the metric. Ex. count"
 }
 variable "core_scaling_down_threshold" {
-  type        = string
-  default     = null
+  type        = number
+  default     = 10
   description = "The value against which the specified statistic is compared."
 }
-variable "core_scaling_down_adjustment" {
-  type        = string
-  default     = null
-  description = "The number of instances to add/remove to/from the target capacity when scale is needed."
-}
+//variable "core_scaling_down_adjustment" {
+//  type        = number
+//  default     = null
+//  description = "The number of instances to add/remove to/from the target capacity when scale is needed."
+//}
 variable "core_scaling_down_min_target_capacity" {
   type        = number
   default     = null
@@ -563,7 +563,7 @@ variable "core_scaling_down_max_target_capacity" {
 }
 variable "core_scaling_down_namespace" {
   type        = string
-  default     = null
+  default     = "AWS/ElasticMapReduce"
   description = "The namespace for the metric."
 }
 variable "core_scaling_down_operator" {
@@ -573,7 +573,7 @@ variable "core_scaling_down_operator" {
 }
 variable "core_scaling_down_evaluation_periods" {
   type        = number
-  default     = null
+  default     = 1
   description = "The number of periods over which data is compared to the specified threshold."
 }
 variable "core_scaling_down_period" {
@@ -608,7 +608,7 @@ variable "core_scaling_down_target" {
 }
 variable "core_scaling_down_action_type" {
   type        = string
-  default     = null
+  default     = "adjustment"
   description = "The type of action to perform. Allowed values are : 'adjustment', 'setMinTarget', 'setMaxTarget', 'updateCapacity', 'percentageAdjustment'"
 }
 ####################################
@@ -616,34 +616,34 @@ variable "core_scaling_down_action_type" {
 ## core Scaling Up Policies ##
 variable "core_scaling_up_policy_name" {
   type        = string
-  default     = null
+  default     = ""
   description = "The name of the policy."
 }
 variable "core_scaling_up_metric_name" {
   type        = string
-  default     = null
+  default     = "AppsPending"
   description = "The name of the metric, with or without spaces."
 }
 variable "core_scaling_up_statistic" {
   type        = string
-  default     = null
-  description = "The metric statistics to return. For information about specific statistics go to Statistics in the Amazon CloudWatch Developer Guide."
+  default     = "average"
+  description = "The aggregation method of the given metric. Valid Values: average | sum | sampleCount | maximum | minimum"
 }
 variable "core_scaling_up_unit" {
   type        = string
-  default     = null
-  description = "The unit for the metric."
+  default     = "count"
+  description = "The unit for the metric. Ex. count"
 }
 variable "core_scaling_up_threshold" {
-  type        = string
-  default     = null
+  type        = number
+  default     = 100
   description = "The value against which the specified statistic is compared."
 }
-variable "core_scaling_up_adjustment" {
-  type        = string
-  default     = null
-  description = "The number of instances to add/remove to/from the target capacity when scale is needed."
-}
+//variable "core_scaling_up_adjustment" {
+//  type        = number
+//  default     = 1
+//  description = "The number of instances to add/remove to/from the target capacity when scale is needed."
+//}
 variable "core_scaling_up_min_target_capacity" {
   type        = number
   default     = null
@@ -656,17 +656,17 @@ variable "core_scaling_up_max_target_capacity" {
 }
 variable "core_scaling_up_namespace" {
   type        = string
-  default     = null
+  default     = "AWS/ElasticMapReduce"
   description = "The namespace for the metric."
 }
 variable "core_scaling_up_operator" {
   type        = string
-  default     = null
+  default     = "gt"
   description = "The operator to use. Allowed values are : 'gt', 'gte', 'lt' , 'lte'."
 }
 variable "core_scaling_up_evaluation_periods" {
   type        = number
-  default     = null
+  default     = 1
   description = "The number of periods over which data is compared to the specified threshold."
 }
 variable "core_scaling_up_period" {
@@ -682,7 +682,7 @@ variable "core_scaling_up_cooldown" {
 variable "core_scaling_up_dimensions" {
   type        = string
   default     = null
-  description = "A mapping of dimensions describing qualities of the metric."
+  description = "A mapping of dimensions describing qualities of the metric. Ex JobFlowId"
 }
 variable "core_scaling_up_minimum" {
   type        = number
@@ -701,7 +701,7 @@ variable "core_scaling_up_target" {
 }
 variable "core_scaling_up_action_type" {
   type        = string
-  default     = null
+  default     = "adjustment"
   description = "The type of action to perform. Allowed values are : 'adjustment', 'setMinTarget', 'setMaxTarget', 'updateCapacity', 'percentageAdjustment'"
 }
 ####################################
@@ -717,7 +717,7 @@ variable "task_type" {
   default     = "setCapacity"
   description = "The type of task to be scheduled. Valid values: setCapacity."
 }
-variable "insatnce_group_type" {
+variable "instance_group_type" {
   type        = string
   default     = "task"
   description = "Select the EMR instance groups to execute the scheduled task on. Valid values: task."
@@ -744,49 +744,53 @@ variable "max_capacity" {
 ####################################
 
 ## Termination Policies ##
-variable "statement" {
+variable "namespace" {
   type        = string
-  default     = null
-  description = ""
-}
-variable "namespsace" {
-  type        = string
-  default     = null
+  default     = "AWS/ElasticMapReduce"
   description = "Must contain the value: AWS/ElasticMapReduce."
 }
-variable "matric_name" {
+variable "metric_name" {
   type        = string
-  default     = null
+  default     = "AppsPending"
   description = "The name of the metric in CloudWatch which the statement will be based on."
 }
 variable "statistic" {
   type        = string
   default     = "sum"
+  description = "The aggregation method of the given metric. Valid Values: average | sum | sampleCount | maximum | minimum"
 }
 variable "unit" {
   type        = string
   default     = "count"
-  description = "Default: count) The unit for a given metric. Valid Values: seconds | microseconds | milliseconds | bytes | kilobytes | megabytes | gigabytes | terabytes | bits | kilobits | megabits | gigabits | terabits | percent | count | bytes/second | kilobytes/second | megabytes/second | gigabytes/second | terabytes/second | bits/second | kilobits/second | megabits/second | gigabits/second | terabits/second | count/second | none"
+  description = "Default: (count) The unit for a given metric. Valid Values: seconds | microseconds | milliseconds | bytes | kilobytes | megabytes | gigabytes | terabytes | bits | kilobits | megabits | gigabits | terabits | percent | count | bytes/second | kilobytes/second | megabytes/second | gigabytes/second | terabytes/second | bits/second | kilobits/second | megabits/second | gigabits/second | terabits/second | count/second | none"
 }
 variable "threshold" {
   type        = number
-  default     = null
-  description = ""
+  default     = 10
+  description = "The value that the specified statistic is compared to."
+}
+variable "period" {
+  type        = number
+  default     = 300
+  description = "The time window in seconds over which the statistic is applied."
 }
 variable "evaluation_periods" {
   type        = number
   default     = 1
   description = "The number of periods over which data is compared to the specified threshold."
 }
-variable "operate" {
+variable "operator" {
   type        = string
-  default     = 0
+  default     = "gte"
   description = "The operator to use in order to determine if the policy is applicable. Valid values: gt | gte | lt | lte"
 }
+####################################
+
+
 variable "release_label" {
   type        = string
-  default     = "emr-5.21.0"
-  description = "Version of EMR"
+  default     = "emr-5.33.0"
+  description = "Version of EMR in format emr-5.33.0"
 }
 
 ####################################
