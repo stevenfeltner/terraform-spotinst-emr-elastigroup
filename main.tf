@@ -219,9 +219,40 @@ resource "spotinst_mrscaler_aws" "MrScaler" {
       operator            = var.operator
     }
   }
+}
 
+### Call script to get the cluster ID using Spot APIs ###
+# This will store the value in a txt file
+resource "null_resource" "cluster_id" {
+  triggers = {
+    cmd = "${path.module}/scripts/get-emr"
+  }
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command = "${local.cmd} get-logs ${spotinst_mrscaler_aws.MrScaler.id} --token ${var.spotinst_token}"
+  }
+  provisioner "local-exec" {
+    when = destroy
+    interpreter = ["/bin/bash", "-c"]
+    command = "${self.triggers.cmd} delete-id"
+  }
 }
 
 
+### Call script to get the DNS name/Ip address from the cluster and store in a file ###
+resource "null_resource" "dns_name" {
+  triggers = {
+    cmd = "${path.module}/scripts/get-emr"
+  }
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command = "${local.cmd} get-dns ${data.local_file.cluster.content} ${var.region}"
+  }
+  provisioner "local-exec" {
+    when = destroy
+    interpreter = ["/bin/bash", "-c"]
+    command = "${self.triggers.cmd} delete-dns"
+  }
+}
 
 

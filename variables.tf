@@ -1,7 +1,4 @@
-variable "spot_token" {
-  type        = string
-}
-variable "spot_account" {
+variable "spotinst_token" {
   type        = string
 }
 variable "name" {

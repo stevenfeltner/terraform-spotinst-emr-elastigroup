@@ -1,5 +1,5 @@
 locals {
-  cmd         = "${path.module}/scripts/get-emr"
-  cluster_id  = data.external.cluster_id.result["cluster_id"]
-  dns_name    = data.external.dns_name.result["dns_name"]
+  cmd         ="${path.module}/scripts/get-emr"
+  cluster_id  = data.local_file.cluster.content
+  dns_name    = data.local_file.dns_name.content
 }
