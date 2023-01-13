@@ -1,30 +1,29 @@
 ### Create Elastigroup EMR Cluster in Spot.io ###
 module "elastigroup_emr" {
-  source = "../"
+  source = "stevenfeltner/emr-elastigroup/spotinst"
 
-  spot_token = ""
-  spot_account = ""
+  spotinst_token  = ""
 
   ### Cluster Configurations ###
-  emr_name = "Example-Spot-EMR-Terraform"
-  release_label = "emr-5.24.0"
-  ami_id = "ami-068c8ed05785be1c4"
-  key = ""
-  log_uri = "s3://"
+  emr_name            = "Example-Spot-EMR-Terraform"
+  release_label       = "emr-5.24.0"
+  ami_id              = "ami-068c8ed05785be1c4"
+  key                 = ""
+  log_uri             = "s3://"
   keep_job_flow_alive = false
-  applications = [{name = "hive", version = "2.37"},{name = "spark", version = "2.47"}]
-  tags = {CreatedBy="Terraform",Env="Dev"}
+  applications        = [{name = "hive", version = "2.37"},{name = "spark", version = "2.47"}]
+  tags                = {CreatedBy="Terraform",Env="Dev"}
 
   ### Network ###
-  region = "us-east-1"
-  subnet_ids = ["us-east-1a:subnet-123456789","us-east-1b:subnet-123456789"]
-  master_sg_id = "sg-123456789"
-  slave_sg_id = "sg-123456789"
+  region              = "us-east-1"
+  subnet_ids          = ["us-east-1a:subnet-123456789","us-east-1b:subnet-123456789"]
+  master_sg_id        = "sg-123456789"
+  slave_sg_id         = "sg-123456789"
 
   ### Config/step Files ###
   # Bootstrap arguments stored in a file on s3
-  bootstrap_bucket = "bucketname"
-  bootstrap_key = "bucketfile.json"
+  bootstrap_bucket    = "bucketname"
+  bootstrap_key       = "bucketfile.json"
 
   #configuration file stored in a file on s3. Note uncomment line 60 in the module main.tf
   #steps_bucket = ""
@@ -64,9 +63,9 @@ module "elastigroup_emr" {
     "m5.8xlarge",
     "m5d.4xlarge"
   ]
-  task_lifecycle = "SPOT"
-  task_desired = 0
-  task_unit = "weight"
+  task_lifecycle  = "SPOT"
+  task_desired    = 0
+  task_unit       = "weight"
 
 }
 

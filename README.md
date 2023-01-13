@@ -12,11 +12,10 @@ This module will also leverage a python script to retrieve the cluster identifie
 ```hcl
 ### Create Elastigroup EMR Cluster in Spot.io ###
 module "elastigroup_emr" {
-  source = "../"
+  source = "stevenfeltner/emr-elastigroup/spotinst"
 
-  spot_token = ""
-  spot_account = "act-123456789"
-
+  spotinst_token = ""
+  
   ### Cluster Configurations ###
   name = "Example-Spot-EMR-Terraform"
   region = "us-east-1"

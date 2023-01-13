@@ -1,13 +1,20 @@
 variable "spotinst_token" {
   type        = string
+  description = "API Token to retrieve cluster information"
+  sensitive   = true
+}
+variable "debug" {
+type          = bool
+description   = "Enable or Disable debug flag to see local exec messages"
+default       = false
 }
 variable "name" {
   type        = string
   description = "Name of the EMR Cluster and Elastigroup"
 }
 variable "description" {
-  type = string
-  default = "Created by Spot.io Terraform"
+  type        = string
+  default     = "Created by Spot.io Terraform"
   description = "The MrScaler description."
 }
 variable "region" {
@@ -29,7 +36,6 @@ variable "expose_cluster_id" {
   default     = true
   description = "Allow the cluster_id to set a Terraform output variable."
 }
-
 ## Provisioning Timeout ##
 variable "timeout" {
   type        = number
@@ -50,13 +56,13 @@ variable "log_uri" {
   default     = ""
 }
 variable "additional_info" {
-  type = string
-  default = null
+  type        = string
+  default     = null
   description = "This is meta information about third-party applications that third-party vendors use for testing purposes."
 }
 variable "security_config" {
-  type = string
-  default = null
+  type        = string
+  default     = null
   description = "The name of the security configuration applied to the cluster."
 }
 variable "service_role" {
@@ -118,8 +124,8 @@ variable "task_lifecycle" {
   description = "SPOT"
 }
 variable "task_ebs_optimized" {
-  type        = bool
-  default     = true
+  type    = bool
+  default = true
 }
 variable "task_volume_per_instance" {
   type        = number
@@ -145,20 +151,20 @@ variable "task_iops" {
 
 ## Core Group (Clone, New strategies) ##
 variable "core_instance_types" {
-  type        = list(string)
-  default     = [""]
+  type    = list(string)
+  default = [""]
 }
 variable "core_desired_capacity" {
-  type        = number
-  default     = 1
+  type    = number
+  default = 1
 }
 variable "core_max_size" {
-  type        = number
-  default     = 100
+  type    = number
+  default = 100
 }
 variable "core_min_size" {
-  type        = number
-  default     = 0
+  type    = number
+  default = 0
 }
 variable "core_unit" {
   type        = string
@@ -186,8 +192,8 @@ variable "core_volume_type" {
   description = "Allowed valuse are 'gp2' and others"
 }
 variable "core_size_in_gb" {
-  type        = number
-  default     = 30
+  type    = number
+  default = 30
 }
 variable "core_iops" {
   type        = string
@@ -199,28 +205,28 @@ variable "core_iops" {
 ## Master Group (Clone, New strategies) ##
 ### Master Node Variables ###
 variable "master_instance_type" {
-  type        = list(string)
-  default     = [""]
+  type    = list(string)
+  default = [""]
 }
 variable "master_lifecycle" {
-  type        = string
-  default     = "ON_DEMAND"
+  type    = string
+  default = "ON_DEMAND"
 }
 variable "master_ebs_optimized" {
-  type        = bool
-  default     = true
+  type    = bool
+  default = true
 }
 variable "master_volume_per_instance" {
-  type        = number
-  default     = 1
+  type    = number
+  default = 1
 }
 variable "master_volume_type" {
-  type        = string
-  default     = "gp2"
+  type    = string
+  default = "gp2"
 }
 variable "master_size_in_gb" {
-  type        = number
-  default     = 30
+  type    = number
+  default = 30
 }
 variable "master_iops" {
   type        = string
@@ -232,10 +238,10 @@ variable "master_iops" {
 ## Tags (Clone, New strategies) ##
 variable "tags" {
   type = list(object({
-    key = string
+    key   = string
     value = string
   }))
-  default = null
+  default     = null
   description = "Tags to be added to resources"
 }
 ####################################
@@ -282,12 +288,12 @@ variable "ec2_key_name" {
   description = "The name of an Amazon EC2 key pair that can be used to ssh to the master node."
 }
 variable "applications" {
-  type        = list(object({name = string, version = string}))
-  default     = null
+  type    = list(object({ name = string, version = string }))
+  default = null
 }
 variable "instance_weights" {
-  type        = list(object({instance_type = string, weighted_capacity = string}))
-  default     = null
+  type    = list(object({ instance_type = string, weighted_capacity = string }))
+  default = null
 }
 ####################################
 
@@ -300,34 +306,34 @@ variable "availability_zones" {
 
 ## Configurations (Clone, New strategies) ##
 variable "config_bucket" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 variable "config_key" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 ####################################
 
 ## Steps (Clone, New strategies) ##
 variable "steps_bucket" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 variable "steps_key" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 ####################################
 
 ## Bootstrap Actions (Clone, New strategies) ##
 variable "bootstrap_bucket" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 variable "bootstrap_key" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 ####################################
 
@@ -720,8 +726,8 @@ variable "instance_group_type" {
   description = "Select the EMR instance groups to execute the scheduled task on. Valid values: task."
 }
 variable "cron" {
-  type        = string
-  default     = "1 0 * * * *"
+  type    = string
+  default = "1 0 * * * *"
 }
 variable "desired_capacity" {
   type        = number
