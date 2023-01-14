@@ -5,7 +5,6 @@ import boto3
 import boto3.session
 import logging
 import click
-import datetime
 import time
 from spotinst_sdk2 import SpotinstSession
 
@@ -32,8 +31,8 @@ def get_id(ctx, **kwargs):
     """Get Elastilogs for Mr Scaler Elastigroup"""
     try:
         session = SpotinstSession(auth_token=kwargs.get('token'))
-        ctx.obj['client'] = session.client("mrScaler_aws")
-        result = ctx.obj['client'].get_emr_cluster(kwargs.get('eg_id'))
+        scaler = session.client("mrScaler_aws")
+        result = scaler.get_emr_cluster(kwargs.get('eg_id'))
         logger.info('Session object created')
     except Exception as e:
         logger.debug('Error creating session object')
@@ -56,26 +55,14 @@ def get_id(ctx, **kwargs):
 @click.argument('eg_id')
 @click.argument('emr_id')
 @click.argument('region')
+@click.option(
+    '--token',
+    required=False,
+    help='Spotinst Token'
+)
 @click.pass_context
 def get_dns(ctx, **kwargs):
     """Get EMR DNS ID for Mr Scaler Elastigroup"""
-
-    @click.pass_context
-    def get_state(ctx, eg_id, token):
-        try:
-            session = SpotinstSession(auth_token=token)
-            logger.info('Session object created')
-            ctx.obj['client'] = session.client("mrScaler_aws")
-            logger.info(eg_id)
-            result = ctx.obj['client'].get_emr_cluster(str(eg_id))
-            state = str(result['state'])
-            logger.info(f'Current state: {state}')
-            return state
-        except Exception as e:
-            logger.debug('Error creating session object')
-            logger.error(e, exc_info=True)
-            sys.exit(1)
-
     try:
         session = boto3.session.Session(region_name=kwargs.get('region'))
         client = session.client('emr')
@@ -85,22 +72,32 @@ def get_dns(ctx, **kwargs):
         logger.error(e, exc_info=True)
         sys.exit(1)
 
+    try:
+        session = SpotinstSession(auth_token=kwargs.get('token'))
+        logger.info('Spotinst Session object created')
+        scaler = session.client("mrScaler_aws")
+    except Exception as e:
+        logger.debug('Error creating Spotinst session object')
+        logger.error(e, exc_info=True)
+        sys.exit(1)
+
     success = False
     while not success:
-        if get_state(kwargs.get('eg_id'), kwargs.get('token')) == "terminated":
+        try:
+            result = scaler.get_emr_cluster(kwargs.get("eg_id"))
+            state = str(result['state'])
+            logger.info(f'Current state: {state}')
+            if state in ["terminated", "terminated_with_errors"]:
+                return click.echo(json.dumps({'dns': state}))
+        except Exception as e:
+            logger.debug('Error getting EMR cluster state')
+            logger.error(e, exc_info=True)
             sys.exit(1)
         result = client.describe_cluster(ClusterId=kwargs.get('emr_id'))
         dns_name = result.get('Cluster', {}).get('MasterPublicDnsName')
         if dns_name is not None:
             success = True
-            try:
-                logger.info('Creating text file to store cluster_ip')
-                text_file = open("cluster_ip.txt", "w")
-                text_file.write(dns_name)
-                text_file.close()
-                click.echo(json.dumps(dns_name))
-            except Exception as e:
-                print(e)
+            return click.echo(json.dumps({'dns': dns_name}))
         else:
             time.sleep(10)
 
@@ -126,16 +123,6 @@ def delete_id():
     """delete the file for cluster_id"""
     try:
         os.remove("cluster_id.txt")
-    except Exception as e:
-        print(e)
-        sys.exit(1)
-
-
-@cli.command()
-def delete_dns():
-    """delete the file for cluster_ip"""
-    try:
-        os.remove("cluster_ip.txt")
     except Exception as e:
         print(e)
         sys.exit(1)

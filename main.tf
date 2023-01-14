@@ -239,20 +239,3 @@ resource "null_resource" "cluster_id" {
 }
 
 
-### Call script to get the DNS name/Ip address from the cluster and store in a file ###
-resource "null_resource" "dns_name" {
-  triggers = {
-    cmd = "${path.module}/scripts/get-emr"
-  }
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = "${local.cmd} get-dns ${spotinst_mrscaler_aws.MrScaler.id} ${data.local_file.cluster.content} ${var.region}"
-  }
-  provisioner "local-exec" {
-    when        = destroy
-    interpreter = ["/bin/bash", "-c"]
-    command     = "${self.triggers.cmd} delete-dns"
-  }
-}
-
-
